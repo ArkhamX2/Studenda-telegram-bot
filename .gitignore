@@ -1,0 +1,8 @@
+ConsoleApp2/bin/*
+tg/bin/*
+ConsoleApp2/obj/*
+tg/obj/*
+ConsoleApp2/.vs/*
+tg/.vs/*
+ConsoleApp2/.idea/*
+.vs/*
