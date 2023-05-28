@@ -14,23 +14,25 @@ namespace tg
     public class Program
     {
         private static string token { get; set; } = "5926149406:AAG24W75qBUKg-IiGcjPYXRb9np43H7bEBU";
-        private static TelegramBotClient client;
+        private static TelegramBotClient client=null!;
         private static string[] s = { "Давай пройдем!", "А кто еще кроме меня?" };
         private static string[] stre = { "чем занят", "кто ты", "зачем" };
-        private static Message chat;
+        private static Message chat=null!;
         static void Main(string[] args)
         {
             client = new TelegramBotClient(token);
             client.StartReceiving(UpdateMessage, Errors);
 
             Console.ReadLine();
+            Console.ReadLine();
+            Console.ReadLine();
 
         }
 
         async private static Task Errors(ITelegramBotClient arg1, Exception ex, CancellationToken arg3)
         {
-            
-           await client.SendTextMessageAsync(chat.Chat.Id, ex.Message, replyMarkup: GetButtons(s));
+
+            await client.SendTextMessageAsync(chat.Chat.Id, ex.Message, replyMarkup: GetButtons(s));
 
         }
 
@@ -49,16 +51,16 @@ namespace tg
             {
                 await client.SendTextMessageAsync(msg.Chat.Id, "напиши имя (Пример: Имя:Чубирик Пароль:qwer )");
             }
-            if (msg.Text.Contains("Им:") && msg.Text.Contains("Пароль:"))
+            if (msg.Text.Contains("Имя:") && msg.Text.Contains("Пароль:"))
             {
                 var info = msg.Text.Split(' ');
                 int found = 0;
                 for (int i = 0; i < info.Length; i++)
                 {
                     found = info[i].IndexOf(':');
-                    info[i] = info[i].Substring(found+1);
+                    info[i] = info[i].Substring(found + 1);
                 }
-                await client.SendTextMessageAsync(msg.Chat.Id, info[0]+" " +info[1]);
+                await client.SendTextMessageAsync(msg.Chat.Id, info[0] + " " + info[1]);
                 sql.RegisterUser(info[0], info[1]);
 
             }
@@ -106,3 +108,4 @@ namespace tg
         #endregion
     }
 }
+

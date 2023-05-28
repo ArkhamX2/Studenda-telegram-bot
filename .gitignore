@@ -6,3 +6,4 @@ ConsoleApp2/.vs/*
 tg/.vs/*
 ConsoleApp2/.idea/*
 .vs/*
+dotnet/obj/*

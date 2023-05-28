@@ -18,7 +18,7 @@ namespace tg
                 var command = new SQLiteCommand();
                 command.Connection = connection;
                 command.CommandText = "select name from user ";
-                var reader=command.ExecuteReader();
+                var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     users.Add(reader.GetString(0));
@@ -34,8 +34,8 @@ namespace tg
                 connection.Open();
                 var command = new SQLiteCommand();
                 command.Connection = connection;
-                if(!IsExist(name,password))
-                { 
+                if (!IsExist(name, password))
+                {
                     command.CommandText = $"insert into user (name,password) values ('{name}','{password}')";
                     command.ExecuteNonQuery();
                 }
