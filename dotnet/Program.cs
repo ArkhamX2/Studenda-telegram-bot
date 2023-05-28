@@ -17,7 +17,7 @@ namespace tg
         private static TelegramBotClient client=null!;
         private static string[] s = { "Давай пройдем!", "А кто еще кроме меня?" };
         private static string[] stre = { "чем занят", "кто ты", "зачем" };
-        private static Message chat=null!;
+        private static Message? chat=null!;
         static void Main(string[] args)
         {
             client = new TelegramBotClient(token);
@@ -38,7 +38,8 @@ namespace tg
 
         async private static Task UpdateMessage(ITelegramBotClient bot, Update upd, CancellationToken arg3)
         {
-            var msg = upd.Message;
+            Message? msg = null!;
+            msg = upd.Message;
             chat = msg;
             Console.WriteLine(msg.Text);
 
