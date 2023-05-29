@@ -38,10 +38,10 @@ namespace tg
 
         async private static Task UpdateMessage(ITelegramBotClient bot, Update upd, CancellationToken arg3)
         {
-            Message? msg = null!;
+            Message msg = null!;
             msg = upd.Message;
             chat = msg;
-            Console.WriteLine(msg.Text);
+            Console.WriteLine(msg?.Text+" "+ msg.Chat.Id);
 
             if (msg.Text == "/start")
             {
@@ -51,6 +51,9 @@ namespace tg
             if (msg.Text == "Давай пройдем!")
             {
                 await client.SendTextMessageAsync(msg.Chat.Id, "напиши имя (Пример: Имя:Чубирик Пароль:qwer )");
+                Console.WriteLine(msg?.Chat.Id);
+
+
             }
             if (msg.Text.Contains("Имя:") && msg.Text.Contains("Пароль:"))
             {
