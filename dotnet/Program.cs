@@ -46,15 +46,11 @@ namespace tg
 
             if (msg?.Text == "/start")
             {
-
                 await client.SendTextMessageAsync(msg.Chat.Id, "Давай пройдем регистрацию", replyMarkup: GetButtons(s));
             }
             if (msg?.Text == "Давай пройдем!")
             {
-                await client.SendTextMessageAsync(msg.Chat.Id, "напиши имя (Пример: Имя:Чубирик Пароль:qwer )");
-                Console.WriteLine(msg?.Chat.Id);
-
-
+                await client.SendTextMessageAsync(msg.Chat.Id, "напиши имя (Пример: Имя:Чубирик Пароль:qwer )");               
             }
             if (msg.Text.Contains("Имя:") && msg.Text.Contains("Пароль:"))
             {
