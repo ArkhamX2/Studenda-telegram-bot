@@ -38,17 +38,18 @@ namespace tg
 
         async private static Task UpdateMessage(ITelegramBotClient bot, Update upd, CancellationToken arg3)
         {
-            Message msg = null!;
+            Message? msg = null!;
             msg = upd.Message;
             chat = msg;
-            Console.WriteLine(msg?.Text+" "+ msg.Chat.Id);
+            
+            Console.WriteLine(msg?.Text+" "+ msg?.Chat.Id);
 
-            if (msg.Text == "/start")
+            if (msg?.Text == "/start")
             {
 
                 await client.SendTextMessageAsync(msg.Chat.Id, "Давай пройдем регистрацию", replyMarkup: GetButtons(s));
             }
-            if (msg.Text == "Давай пройдем!")
+            if (msg?.Text == "Давай пройдем!")
             {
                 await client.SendTextMessageAsync(msg.Chat.Id, "напиши имя (Пример: Имя:Чубирик Пароль:qwer )");
                 Console.WriteLine(msg?.Chat.Id);
@@ -63,26 +64,28 @@ namespace tg
                 {
                     found = info[i].IndexOf(':');
                     info[i] = info[i].Substring(found + 1);
-                }
-                await client.SendTextMessageAsync(msg.Chat.Id, info[0] + " " + info[1]);
-                sql.RegisterUser(info[0], info[1]);
+                }                
+                await client.SendTextMessageAsync(msg.Chat.Id, sql.RegisterUser(info[0], info[1], msg));
+               
 
             }
             if (msg.Text == "А кто еще кроме меня?")
             {
-                string users = string.Empty;
-                if (sql.GetUsers() == null)
-                {
-                    await client.SendTextMessageAsync(msg.Chat.Id, $"никто", replyMarkup: GetButtons(s));
-
-                }
-                else
-                {
-                    foreach (var user in sql.GetUsers())
+                using (ApplicationContext db = new ApplicationContext())
+                {                   
+                    string users = string.Empty;
+                    if (sql.GetUsers() == null)
                     {
-                        users += user + Environment.NewLine;
+                        await client.SendTextMessageAsync(msg.Chat.Id, $"никто", replyMarkup: GetButtons(s));
                     }
-                    await client.SendTextMessageAsync(msg.Chat.Id, $"Пользователи:\n{users}", replyMarkup: GetButtons(s));
+                    else
+                    {
+                        foreach (var user in sql.GetUsers())
+                        {
+                            users += user + Environment.NewLine;
+                        }
+                        await client.SendTextMessageAsync(msg.Chat.Id, $"Пользователи:\n{users}", replyMarkup: GetButtons(s));
+                    }
                 }
 
 
