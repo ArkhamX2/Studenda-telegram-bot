@@ -2,56 +2,55 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using model;
+using Telegram.Bot.Types;
 
 namespace tg
 {
     public class sql
     {
-        private static string CONNECTION_STRING = "Data Source =D:\\2 курс\\gi\\sqlite\\my.db";
+       
 
         public static List<string> GetUsers()
         {
-            using (var connection = new SQLiteConnection(CONNECTION_STRING))
+            using(ApplicationContext db=new ApplicationContext())
             {
-                connection.Open();
-                var users = new List<string>();
-                var command = new SQLiteCommand();
-                command.Connection = connection;
-                command.CommandText = "select name from user ";
-                var reader = command.ExecuteReader();
-                while (reader.Read())
+                var UsersText = new List<string>();
+                var UserList = db.Users;
+                foreach(var user in UserList)
                 {
-                    users.Add(reader.GetString(0));
+                    UsersText.Add(user.tglink+" "+user.name);
+                    
                 }
-                return users;
+                return UsersText;
             }
         }
 
-        public static void RegisterUser(string name, string password)
+        public static string RegisterUser(string Name, string Password,Message msg)
         {
-            using (var connection = new SQLiteConnection(CONNECTION_STRING))
+            using (ApplicationContext db = new ApplicationContext())
             {
-                connection.Open();
-                var command = new SQLiteCommand();
-                command.Connection = connection;
-                if (!IsExist(name, password))
+                if (!IsExist(Name, Password))
                 {
-                    command.CommandText = $"insert into user (name,password) values ('{name}','{password}')";
-                    command.ExecuteNonQuery();
+                    string tgl = "@" + msg.From?.Username;
+                    long tgid = msg.Chat.Id;
+                    var s = new ChatUser { name = Name, password = Password, chat_id = tgid, tglink = tgl };
+                    db.Users.Add(s);
+                    db.SaveChanges();
+                    return $"Вы успешно зарегистрировались как {Name}";
                 }
-
-
+                return "есть уже такой пользователь";
+                
             }
         }
-        public static bool IsExist(string name, string password)
+        public static bool IsExist(string Name, string Password)
         {
-            using (var connection = new SQLiteConnection(CONNECTION_STRING))
-            {
-                connection.Open();
-                var command = new SQLiteCommand();
-                command.Connection = connection;
-                command.CommandText = $"select 1 from user where name like '{name}' and password='{password}'";
-                return command.ExecuteScalar() != null;
+            using (ApplicationContext db = new ApplicationContext())
+            {               
+                var UserList = db.Users.Where(x => x.name == Name).Where(x => x.password == Password).ToList();
+                
+                return UserList.Count !=0;
             }
         }
     }
