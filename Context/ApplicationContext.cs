@@ -4,11 +4,11 @@ using model;
 
 public class ApplicationContext : DbContext
 {
-    public DbSet<User> Users => Set<User>();
+    public DbSet<ChatUser> Users => Set<ChatUser>();
     public ApplicationContext() => Database.EnsureCreated();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source=test.db");
+        optionsBuilder.UseSqlite("Data Source=D:\\2 курс\\gi\\sqlite\\test.db");
     }
 }
